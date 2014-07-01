@@ -245,7 +245,7 @@ class InvitationStartView(SendTokenEmailMixin, CreateView):
     form_class = InvitationStartForm
     template_name = 'sky_visitor/invitation_start.html'
     success_message = _("Invitation successfully delivered.")
-    email_template = 'invitation_complete'
+    email_template = 'invitation-complete'
 
     def get_user_object(self):
         """
