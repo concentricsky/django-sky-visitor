@@ -14,6 +14,7 @@
 from django.contrib import auth
 from django.conf import settings
 from django.contrib import messages
+from django.contrib.auth import get_user_model
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
 from django.shortcuts import resolve_url
@@ -164,8 +165,19 @@ class ForgotPasswordView(SendTokenEmailMixin, FormView):
     token_view_name = 'reset_password'
 
     def form_valid(self, form):
-        user = form.users_cache[0]
-        self.send_email(user)
+        # Copied behavior from django.contrib.auth.forms.PasswordResetForm
+        UserModel = get_user_model()
+        email = form.cleaned_data["email"]
+        active_users = UserModel._default_manager.filter(
+            email__iexact=email, is_active=True)
+        for user in active_users:
+            # Make sure that no email is sent to a user that actually has
+            # a password marked as unusable
+            if not user.has_usable_password():
+                continue
+
+            self.send_email(user)
+
         return super(ForgotPasswordView, self).form_valid(form)  # Do redirect
 
     def get_success_url(self):
