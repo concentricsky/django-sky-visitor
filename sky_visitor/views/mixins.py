@@ -17,6 +17,7 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.tokens import default_token_generator
 from django.contrib.sites.models import Site
+from django.core.exceptions import ImproperlyConfigured
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
 from django.shortcuts import resolve_url
@@ -77,10 +78,10 @@ class SendTokenEmailMixin(object):
             raise ImproperlyConfigured("No email_template defined.")
 
         context = self.get_email_context_data(user, **kwargs)
-        return send_email_template(template_name, [to_address], 
-            context=context, 
-            attachments=kwargs.get('attachments',None),
-            headers=kwargs.get('headers',None))
+        return send_email_template(template_name, [to_address],
+            context=context,
+            attachments=kwargs.get('attachments', None),
+            headers=kwargs.get('headers', None))
 
 
 class TokenValidateMixin(object):
