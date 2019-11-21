@@ -30,7 +30,7 @@ from emailtemplates.utils import send_email_template
 
 
 class LoginRequiredMixin(object):
-    u"""Ensures that user must be authenticated in order to access view."""
+    """Ensures that user must be authenticated in order to access view."""
 
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
